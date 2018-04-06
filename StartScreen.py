@@ -25,7 +25,7 @@ class DecisionEnum(Enum):
     PLAY = 1
     HIGH_SCORE = 2
 
-class OpeningScreen():
+class StartScreen():
     def __init__(self,screenWidth,screenHeight):
         SCREEN_WIDTH = screenWidth
         SCREEN_HEIGHT = screenHeight
@@ -80,7 +80,6 @@ class OpeningScreen():
                     sys.exit()
             pygame.display.update()
             
-        print(self.Decision)
         pygame.quit()
         sys.exit
         
@@ -88,7 +87,4 @@ class OpeningScreen():
         if(button.CheckIfWithinBorders(mousePos)):
                 button.DrawButton(display,color,thickness)
     
-
-OpeningScreen(640,480)
-
 
