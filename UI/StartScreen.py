@@ -2,8 +2,8 @@
 import pygame, sys
 from enum import Enum
 
-from ScreenBase import *
-from Log import Logger
+from UI.Base.ScreenBase import *
+from Logging.Log import Logger
 
 class DecisionEnum(Enum):
     PLAY = 1
@@ -14,8 +14,8 @@ class StartScreen(ScreenBase):
         super().__init__(screenWidth, screenHeight)
         
         #Local variables
-        BACKGROUND_IMAGE = pygame.image.load("snake.jpg")
-        BACKGROUND_IMAGE_2 = pygame.image.load("snake2.jpg")        
+        BACKGROUND_IMAGE = pygame.image.load("UI\SourceFiles\snake.jpg")
+        BACKGROUND_IMAGE_2 = pygame.image.load("UI\SourceFiles\snake2.jpg")        
         BLACK=(0,0,0)
         
         #Properties specific to screen

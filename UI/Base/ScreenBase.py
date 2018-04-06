@@ -2,7 +2,7 @@ import pygame, sys
 from pygame.locals import *
 from enum import Enum
 
-from Log import Logger
+from Logging.Log import Logger
 
 class Button():
     def CheckIfWithinBorders(self,pos):

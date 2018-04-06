@@ -1,12 +1,12 @@
-import StartScreen
 
-from Log import Logger
+from UI.StartScreen import *
+from Logging.Log import Logger
 
-start = StartScreen.StartScreen(640,480)
+start = StartScreen(640,480)
 
-if start.Decision is StartScreen.DecisionEnum.PLAY:
+if start.Decision is DecisionEnum.PLAY:
     Logger.LogInfo('Play Screen Activated')
     print(1)
-if start.Decision is StartScreen.DecisionEnum.HIGH_SCORE:
+if start.Decision is DecisionEnum.HIGH_SCORE:
     Logger.LogInfo('High Score Screen Activated')
     print(2)
