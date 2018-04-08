@@ -1,6 +1,8 @@
 import pygame
 from UI.Base.ScreenBase import *
 from enum import Enum
+import random
+
 
 
 class DirectionEnum(Enum):
@@ -59,7 +61,15 @@ class Snake(pygame.sprite.Group):
             head.rect.center = (head.rect.center[0],head.rect.center[1]-20)
         elif self.Direction is DirectionEnum.Down:
             head.rect.center = (head.rect.center[0],head.rect.center[1]+20)
-
+    
+    def EatFood(self,foodBlock):
+        self.Head = foodBlock
+        dummyBlock = BodyPart()
+        self.add(dummyBlock)
+        
+        for x in range(0,len(self.sprites())-1)[::-1]:
+            self.sprites()[x+1] = self.sprites()[x]
+        self.sprites()[0] = foodBlock
             
         
         
@@ -68,14 +78,41 @@ class SnakeScreen(ScreenBase):
         super().__init__(display)
         display.fill(Color.White)
         
-
-
-
+        
+class Feed:
+        
+        
+    def __init__(self):
+        self.WidthList = []
+        self.HeightList = []       
+        x = 10
+        y = 10       
+        while x<640:
+            self.WidthList.append(x)
+            x=x+20
+        
+        while y< 480:
+            self.HeightList.append(y)
+            y=y+20
+            
+    def GetNewBlock(self):
+        random.shuffle(self.WidthList)
+        random.shuffle(self.HeightList)
+        body = BodyPart()
+        body.rect.center = (self.WidthList[0],self.HeightList[0])
+        return body
+               
 display = pygame.display.set_mode((640,480),0,32)
 screen = SnakeScreen(display)
 head = Head()
 group = Snake(head)
 field = PlayField()
+feed = Feed()
+block = feed.GetNewBlock()
+groupFood = pygame.sprite.Group()
+groupFood.add(block)
+
+print(block.rect.center)
 
 UPDATE = pygame.USEREVENT + 1
 pygame.time.set_timer(UPDATE,100)
@@ -84,7 +121,7 @@ while True:
     screen.CheckEvents()
     display.fill(Color.White)
     group.draw(display)   
-    
+    groupFood.draw(display)
     for event in pygame.event.get():
         if event.type==QUIT:
             self.Quit()
@@ -106,5 +143,10 @@ while True:
             group.Move()
             group.draw(display)
             group.update()
+            if pygame.sprite.collide_rect(group.Head,groupFood.sprites()[0]):
+                group.EatFood(groupFood.sprites()[0])
+                block = feed.GetNewBlock()
+                groupFood.empty()
+                groupFood.add(block)
 
     
