@@ -35,22 +35,26 @@ class BodyPart(pygame.sprite.Sprite):
         
         
 class Snake(pygame.sprite.Group):
-    def __init__(self,head):
-        pygame.sprite.Group.__init__(self)
+##    def __init__(self):
+##        pygame.sprite.Group.__init__(self)
+
+        
+    def ConstructSnake(self):
         self.Direction = DirectionEnum.Forward
-        self.add(head)
-        self.Head = head
         body = BodyPart()
-        body.rect.center = (head.rect.center[0]-20,head.rect.center[1])
+        body.rect.center = (30,30)
         self.add(body)
+        head = body
         body2 = BodyPart()
         body2.rect.center = (head.rect.center[0]-20,head.rect.center[1])
         self.add(body2)
         body3 = BodyPart()
         body3.rect.center = (head.rect.center[0]-20,head.rect.center[1])
         self.add(body3)
+    
 
     def Move(self):
+        head = self.sprites()[0]
         for x in range(1,len(self.sprites()))[::-1]:
             self.sprites()[x].rect.center =  self.sprites()[x-1].rect.center
         if self.Direction is DirectionEnum.Forward:
@@ -63,13 +67,23 @@ class Snake(pygame.sprite.Group):
             head.rect.center = (head.rect.center[0],head.rect.center[1]+20)
     
     def EatFood(self,foodBlock):
-        self.Head = foodBlock
-        dummyBlock = BodyPart()
-        self.add(dummyBlock)
+        allSprites = self.copy()
+        self.empty()
+        self.add(foodBlock)
+        self.add(allSprites.sprites())
+##        print(len(self.sprites()))
+##        self.empty()
+##        self.Head = foodBlock
+##        self.add(foodBlock)
+##        self.add(copyOfSnake.sprites())
         
-        for x in range(0,len(self.sprites())-1)[::-1]:
-            self.sprites()[x+1] = self.sprites()[x]
-        self.sprites()[0] = foodBlock
+        
+##        dummyBlock = BodyPart()
+##        self.add(dummyBlock)
+##        
+##        for x in range(0,len(self.sprites())-1)[::-1]:
+##            self.sprites()[x+1] = self.sprites()[x]
+##        self.sprites()[0] = foodBlock
             
         
         
@@ -104,8 +118,8 @@ class Feed:
                
 display = pygame.display.set_mode((640,480),0,32)
 screen = SnakeScreen(display)
-head = Head()
-group = Snake(head)
+group = Snake()
+group.ConstructSnake()
 field = PlayField()
 feed = Feed()
 block = feed.GetNewBlock()
@@ -137,13 +151,13 @@ while True:
                 group.Direction = DirectionEnum.Forward
             print(group.Direction)
         if event.type==UPDATE:
-            game_over = not(pygame.sprite.collide_rect(field,group.Head))
+            game_over = not(pygame.sprite.collide_rect(field,group.sprites()[0]))
             if game_over:
                 screen.Quit()
             group.Move()
             group.draw(display)
             group.update()
-            if pygame.sprite.collide_rect(group.Head,groupFood.sprites()[0]):
+            if pygame.sprite.collide_rect(group.sprites()[0],groupFood.sprites()[0]):
                 group.EatFood(groupFood.sprites()[0])
                 block = feed.GetNewBlock()
                 groupFood.empty()
