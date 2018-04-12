@@ -34,7 +34,7 @@ class StartScreen(ScreenBase):
         while not self.DecisionMade:
             mousePos = pygame.mouse.get_pos()
 
-            if pygame.mouse.get_pressed()[0] and not previousMousePress:
+            if pygame.mouse.get_pressed()[0] and not self.previousMousePress:
                 if self.VolumeButton.CheckIfWithinBorders(mousePos):
                     self.Mute = not self.Mute
                     Logger.LogInfo('%s %s' % ('Mute: ' , str(self.Mute)))
@@ -44,9 +44,9 @@ class StartScreen(ScreenBase):
                 if self.PlayButton.CheckIfWithinBorders(mousePos):
                     self.Decision = StartScreenDecisionEnum.PLAY
                     self.DecisionMade = True
-                previousMousePress = True
+                self.previousMousePress = True
             if not pygame.mouse.get_pressed()[0]:
-                previousMousePress = False
+                self.previousMousePress = False
                 
             self.DISPLAY.fill(Color.White)  
             if not self.Mute:
@@ -59,7 +59,7 @@ class StartScreen(ScreenBase):
             self.DisplayButton(self.VolumeButton,mousePos,Color.Black,4)
             
             self.CheckEvents()                   
-        self.Quit()
+        self.Quit(False)
 
 
         

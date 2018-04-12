@@ -58,8 +58,8 @@ class ScreenBase():
                 self.Quit()
         pygame.display.update()
     
-    def Quit(self):
+    def Quit(self,quitScreen=True):
         Logger.LogInfo('Exit Screen')
-        pygame.quit()
+        if quitScreen: pygame.quit()
         sys.exit
     
