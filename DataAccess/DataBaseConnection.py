@@ -6,7 +6,7 @@ import pymysql
 class DataBaseConnection():
     def __init__(self):
         try:
-            self.conn = pymysql.connect(host='127.0.0.1', port=3306, user='oot', passwd='root', db='dbo')
+            self.conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='root', db='dbo')
             self.cur = self.conn.cursor()
             self.connectionMade  = True
             print('connection ok')

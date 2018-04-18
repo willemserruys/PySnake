@@ -9,9 +9,9 @@ import pymysql
 WIDTH = 640
 HEIGHT = 480
 
-display = pygame.display.set_mode((WIDTH,HEIGHT),pygame.NOFRAME)
+display = pygame.display.set_mode((WIDTH,HEIGHT))
 
-player_name = input("Enter Name ")
+player_name = 'test' #input("Enter Name ")
 print("Welcome, " + player_name)
 
 start = StartScreen(display)

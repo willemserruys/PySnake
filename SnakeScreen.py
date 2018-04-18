@@ -1,6 +1,7 @@
 from UI.Base.ScreenBase import *
 from Snake.Snake import *
 from Snake.Enums import *
+from DataAccess.Controller import *
 
 class PlayField:
     def __init__(self):
@@ -15,6 +16,7 @@ class SnakeScreen(ScreenBase):
         self.display.fill(Color.White)
         self.decision = False
         self.highscore = 0
+        self.key = pygame.K_RIGHT
         
     def Show(self):   
         screen = self.display
@@ -22,7 +24,7 @@ class SnakeScreen(ScreenBase):
         group = Snake()
         group.ConstructSnake()
         feed = Food()
-        block = feed.GetNewBlock()
+        block = feed.GetNewBlock(group.sprites())
         groupFood = pygame.sprite.Group()
         groupFood.add(block)
 
@@ -32,21 +34,38 @@ class SnakeScreen(ScreenBase):
         pygame.time.set_timer(UPDATE,100)
         textsurface = Font.MonoSpace(15).render(str(self.highscore),False,Color.Black)
 
+        ps4 = PS4Controller()
+        ps4.init()
+        print(ps4.joystick_present)
+        if ps4.joystick_present:
+            if not ps4.hat_data:
+                ps4.hat_data = {}
+                for i in range(ps4.controller.get_numhats()):
+                    ps4.hat_data[i] = (0, 0)
 
         while not self.decision:
             self.CheckEvents()
+            
             for event in pygame.event.get():
+                if ps4.joystick_present:
+                    if event.type == pygame.JOYHATMOTION:
+                        ps4.hat_data[event.hat] = event.value
+                        hatValues = ps4.hat_data[0]
+                        if hatValues[0] == -1:
+                            self.key = pygame.K_LEFT
+                        elif hatValues[0] == 1:
+                            self.key = pygame.K_RIGHT
+                        elif hatValues[1] == -1:
+                            self.key = pygame.K_DOWN
+                        elif hatValues[1] == 1:
+                            self.key = pygame.K_UP                       
+                    
                 if event.type==pygame.KEYDOWN:
-                    if event.key == pygame.K_UP and not group.Direction is DirectionEnum.Down:
-                        group.Direction = DirectionEnum.Up
-                    if event.key == pygame.K_DOWN and not group.Direction is DirectionEnum.Up:
-                        group.Direction = DirectionEnum.Down
-                    if event.key == pygame.K_LEFT and not group.Direction is DirectionEnum.Forward:
-                        group.Direction = DirectionEnum.Backward
-                    if event.key == pygame.K_RIGHT and not group.Direction is DirectionEnum.Backward:
-                        group.Direction = DirectionEnum.Forward
+                    self.key = event.key
+
                 if event.type==UPDATE:
-                    game_over = not(pygame.sprite.collide_rect(field,group.sprites()[0]))
+                    group.UpdateDirection(self.key)
+                    game_over = not(pygame.sprite.collide_rect(field,group.sprites()[0])) or group.DetectCollisionWithItself()
                     if game_over:
                         self.decision = True
                         self.Quit(False)
@@ -59,7 +78,7 @@ class SnakeScreen(ScreenBase):
 
                         if pygame.sprite.collide_rect(group.sprites()[0],groupFood.sprites()[0]):
                             group.EatFood(groupFood.sprites()[0])
-                            block = feed.GetNewBlock()
+                            block = feed.GetNewBlock(group.sprites())
                             groupFood.empty()
                             groupFood.add(block)
                             self.highscore+=1
