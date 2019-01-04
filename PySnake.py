@@ -1,7 +1,6 @@
 import pygame, sys
 from UI.StartScreen import *
 from UI.HighScoreScreen import *
-from Logging.Log import Logger
 from SnakeScreen import SnakeScreen
 from DataAccess.DataBaseConnection import *
 import pymysql
@@ -11,13 +10,14 @@ HEIGHT = 480
 
 display = pygame.display.set_mode((WIDTH,HEIGHT))
 
-player_name = 'test' #input("Enter Name ")
+player_name = 'willem' #input("Enter Name ")
 print("Welcome, " + player_name)
 
 start = StartScreen(display)
 start.Show()
 snake = SnakeScreen(display)
 data = DataBaseConnection()
+
                 
 while(True):
     if start.Decision is StartScreenDecisionEnum.PLAY:

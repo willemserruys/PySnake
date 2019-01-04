@@ -31,7 +31,7 @@ class SnakeScreen(ScreenBase):
         print(block.rect.center)
 
         UPDATE = pygame.USEREVENT + 1
-        pygame.time.set_timer(UPDATE,100)
+        pygame.time.set_timer(UPDATE,70)
         textsurface = Font.MonoSpace(15).render(str(self.highscore),False,Color.Black)
 
         ps4 = PS4Controller()
@@ -63,6 +63,7 @@ class SnakeScreen(ScreenBase):
                 if event.type==pygame.KEYDOWN:
                     self.key = event.key
 
+
                 if event.type==UPDATE:
                     group.UpdateDirection(self.key)
                     game_over = not(pygame.sprite.collide_rect(field,group.sprites()[0])) or group.DetectCollisionWithItself()
@@ -74,6 +75,7 @@ class SnakeScreen(ScreenBase):
                         screen.blit(textsurface,(620,20))
                         group.Move()
                         group.draw(screen)
+                        pygame.display.update()
                         groupFood.draw(screen)
 
                         if pygame.sprite.collide_rect(group.sprites()[0],groupFood.sprites()[0]):
@@ -83,3 +85,4 @@ class SnakeScreen(ScreenBase):
                             groupFood.add(block)
                             self.highscore+=1
                             textsurface = Font.MonoSpace(15).render(str(self.highscore),False,Color.Black)
+
